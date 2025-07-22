@@ -114,7 +114,7 @@ resource "aws_batch_job_definition" "this" {
           ]
         },
         # Hacky approach to deal with conditional nested maps
-        local.use_fargate ? { ephemeralStorage = { sizeInGiB = var.ephemeral_storage_size } } : {},
+        local.use_fargate && var.ephemeral_storage_size > 0 ? { ephemeralStorage = { sizeInGiB = var.ephemeral_storage_size } } : {},
         local.use_fargate ? { networkConfiguration = { assignPublicIp = var.assign_public_ip ? "ENABLED" : "DISABLED" } } : {},
 
         local.use_fargate ? { platformVersion = var.platform_version } : {},
