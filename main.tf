@@ -113,13 +113,11 @@ resource "aws_batch_job_definition" "this" {
             )
           ]
         },
-        local.use_fargate ? {
-          networkConfiguration = {
-            assignPublicIp = var.assign_public_ip ? "ENABLED" : "DISABLED"
-          },
-          platformVersion  = var.platform_version,
-          ephemeralStorage = var.ephemeral_storage_size > 0 ? { sizeInGiB = var.ephemeral_storage_size } : null
-        } : {},
+        # Hacky approach to deal with conditional nested maps
+        local.use_fargate ? { ephemeralStorage = { sizeInGiB = var.ephemeral_storage_size } } : {},
+        local.use_fargate ? { networkConfiguration = { assignPublicIp = var.assign_public_ip ? "ENABLED" : "DISABLED" } } : {},
+
+        local.use_fargate ? { platformVersion = var.platform_version } : {},
         var.pid_mode != null ? { pidMode = var.pid_mode } : {},
         var.ipc_mode != null ? { ipcMode = var.ipc_mode } : {},
         var.runtime_platform != null ? { runtimePlatform = var.runtime_platform } : {}
