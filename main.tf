@@ -78,6 +78,7 @@ resource "aws_batch_job_definition" "this" {
   name                       = module.batch_label.id
   type                       = "container"
   tags                       = module.batch_label.tags
+  platform_capabilities      = local.use_fargate ? ["FARGATE"] : ["EC2"]
   parameters                 = var.batch_job_parameters
   deregister_on_new_revision = var.batch_job_deregister_on_new_revision
   ecs_properties = jsonencode({
