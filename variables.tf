@@ -132,13 +132,14 @@ variable "task_policy_arns_map" {
 }
 
 variable "runtime_platform" {
-  type        = list(map(string))
+  type        = map(string)
   description = <<-EOT
-    Zero or one runtime platform configurations that containers in your task may use.
-    Map of strings with optional keys `operating_system_family` and `cpu_architecture`.
-    See `runtime_platform` docs https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition#runtime_platform
+    A map of runtime platform configuration options to use for the task definition.
+    The map can include the following keys:
+    - `cpuArchitecture`: The CPU architecture to use for tasks in the task definition. Valid values are `X86_64` and `ARM64`.
+    - `operatingSystemFamily`: The operating system family to use for tasks in the task definition. Valid values are `LINUX` and `WINDOWS`.
     EOT
-  default     = []
+  default     = null
 }
 
 variable "efs_volumes" {
