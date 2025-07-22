@@ -41,3 +41,18 @@ output "task_role_id" {
   description = "ECS Task role id"
   value       = one(aws_iam_role.ecs_task[*]["unique_id"])
 }
+
+output "ecs_cluster_arn" {
+  description = "ECS Cluster ARN"
+  value       = one(aws_batch_compute_environment.this[*]["ecs_cluster_arn"])
+}
+
+output "batch_compute_environment_arn" {
+  description = "Batch Compute Environment ARN"
+  value       = one(aws_batch_compute_environment.this[*]["arn"])
+}
+
+output "batch_compute_queue_arn" {
+  description = "Batch Compute Queue ARN"
+  value       = one(aws_batch_job_queue.this[*]["arn"])
+}
