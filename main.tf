@@ -22,7 +22,7 @@ resource "aws_batch_compute_environment" "this" {
   tags  = module.batch_label.tags
   compute_resources {
     subnets            = var.subnet_ids
-    security_group_ids = var.security_group_ids
+    security_group_ids = concat(var.security_group_ids, local.create_security_group ? [aws_security_group.batch[0].id] : [])
     type               = var.batch_compute_env_resource
     max_vcpus          = var.batch_compute_env_max_vcpus
     # min_vcpus           = local.use_fargate ? var.min_vcpus : null
