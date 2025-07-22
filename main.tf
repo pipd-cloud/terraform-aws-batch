@@ -113,18 +113,16 @@ resource "aws_batch_job_definition" "this" {
             )
           ]
         },
-        local.use_fargate ? merge(
-          {
-            networkConfiguration = {
-              assignPublicIp = var.assign_public_ip ? "ENABLED" : "DISABLED",
-            }
+        local.use_fargate ? {
+          networkConfiguration = {
+            assignPublicIp = var.assign_public_ip ? "ENABLED" : "DISABLED"
           },
-          { platformVersion = var.platform_version },
-          var.ephemeral_storage_size > 0 ? { ephemeralStorage = { sizeInGiB = var.ephemeral_storage_size } } : {},
-        ) : {},
+          platformVersion  = var.platform_version,
+          ephemeralStorage = var.ephemeral_storage_size > 0 ? { sizeInGiB = var.ephemeral_storage_size } : null
+        } : {},
         var.pid_mode != null ? { pidMode = var.pid_mode } : {},
         var.ipc_mode != null ? { ipcMode = var.ipc_mode } : {},
-        var.runtime_platform != null ? { runtimePlatform = var.runtime_platform } : {},
+        var.runtime_platform != null ? { runtimePlatform = var.runtime_platform } : {}
       )
     ]
   })
