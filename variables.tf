@@ -51,6 +51,10 @@ variable "security_group_ids" {
   description = "Security group IDs to allow in Service `network_configuration` if `var.network_mode = \"awsvpc\"`"
   type        = list(string)
   default     = []
+  validation {
+    condition     = length(var.security_group_ids) > 0
+    error_message = "You must provide at least one security group ID in `security_group_ids`."
+  }
 }
 
 variable "platform_version" {
