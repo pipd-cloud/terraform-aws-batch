@@ -89,10 +89,7 @@ resource "aws_batch_job_definition" "this" {
           containers           = jsondecode(var.container_definition_json),
           enableExecuteCommand = var.exec_enabled
           executionRoleArn     = length(local.task_exec_role_arn) > 0 ? local.task_exec_role_arn : one(aws_iam_role.ecs_exec[*]["arn"])
-          networkConfiguration = {
-            assignPublicIp = tostring(var.assign_public_ip)
-          }
-          taskRoleArn = length(local.task_role_arn) > 0 ? local.task_role_arn : one(aws_iam_role.ecs_task[*]["arn"])
+          taskRoleArn          = length(local.task_role_arn) > 0 ? local.task_role_arn : one(aws_iam_role.ecs_task[*]["arn"])
           volumes = [for v in local.volumes :
             merge(
               { name = v.name },
@@ -117,6 +114,11 @@ resource "aws_batch_job_definition" "this" {
           ]
         },
         local.use_fargate ? merge(
+          {
+            networkConfiguration = {
+              assignPublicIp = var.assign_public_ip ? "ENABLED" : "DISABLED",
+            }
+          },
           { platformVersion = var.platform_version },
           var.ephemeral_storage_size > 0 ? { ephemeralStorage = { sizeInGiB = var.ephemeral_storage_size } } : {},
         ) : {},
