@@ -56,3 +56,8 @@ output "batch_compute_queue_arn" {
   description = "Batch Compute Queue ARN"
   value       = one(aws_batch_job_queue.this[*]["arn"])
 }
+
+output "batch_job_defintion_arn" {
+  description = "Batch Job Definition ARN"
+  value       = one(aws_batch_job_definition.this[*]["arn"])
+}
