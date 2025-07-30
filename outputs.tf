@@ -61,3 +61,8 @@ output "batch_job_definition_arn" {
   description = "Batch Job Definition ARN"
   value       = one(aws_batch_job_definition.this[*]["arn"])
 }
+
+output "batch_job_definition_arn_prefix" {
+  description = "Batch Job Definition ARN prefix"
+  value       = one(aws_batch_job_definition.this[*]["arn_prefix"])
+}
