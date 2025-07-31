@@ -73,6 +73,11 @@ resource "aws_batch_job_queue" "this" {
   tags = module.batch_label.tags
 }
 
+resource "local_file" "container_def" {
+  content  = var.container_definition_json
+  filename = "${path.module}/container_definition.json"
+}
+
 resource "aws_batch_job_definition" "this" {
   count                      = local.enabled ? 1 : 0
   name                       = module.batch_label.id
@@ -124,6 +129,10 @@ resource "aws_batch_job_definition" "this" {
       )
     ]
   })
+  lifecycle {
+    ignore_changes       = [ecs_properties]
+    replace_triggered_by = [local_file.container_def]
+  }
 }
 
 module "batch_label" {
